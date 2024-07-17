@@ -9,59 +9,46 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  // Res,
+  ParseIntPipe,
 } from '@nestjs/common';
-//import { Response } from 'express';
-
+import { ProductsService } from '../../services/products/products.service';
 @Controller('products')
 export class ProductsController {
+  constructor(private productsService: ProductsService) {}
+
   @Get()
   getMany(
-    @Query('limit') limit: number,
-    @Query('offset') offset: number,
+    @Query('limit') limit = 100,
+    @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    return `Products: Limit => ${limit}, Offset => ${offset}, Brand => ${brand}`;
+    return this.productsService.findAll();
   }
 
   @Get(':productId')
   @HttpCode(HttpStatus.OK)
-  getOne(@Param('productId') productId: string) {
+  getOne(@Param('productId', ParseIntPipe) productId: number) {
     return {
-      message: `Product: ${productId}`,
+      msg: `Producto ${productId}`,
+      body: this.productsService.findOne(productId),
     };
   }
-  // EXPRESS
-  //@Get(':productId')
-  //@HttpCode(HttpStatus.OK)
-  //getOne(@Res() response: Response, @Param('productId') productId: string) {
-  //  response.status(200).send({
-  //    message: `Product: ${productId}`,
-  //  }),
-  //}
 
   @Post()
   create(@Body() payload: any) {
-    return {
-      message: 'Accion crear',
-      payload,
-    };
+    this.productsService.create(payload);
   }
 
-  @Put(':/productId')
-  update(@Param('productId') productId: number, @Body() payload: any) {
-    return {
-      message: 'Update Method',
-      productId,
-      payload,
-    };
+  @Put(':productId')
+  update(
+    @Param('productId', ParseIntPipe) productId: number,
+    @Body() payload: any,
+  ) {
+    return this.productsService.update(productId, payload);
   }
 
-  @Delete(':/productId')
-  delete(@Param('productId') productId: number) {
-    return {
-      message: 'Delete Method',
-      productId,
-    };
+  @Delete(':productId')
+  delete(@Param('productId', ParseIntPipe) productId: number) {
+    return this.productsService.remove(productId);
   }
 }
