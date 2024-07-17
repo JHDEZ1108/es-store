@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Controller,
   Get,
@@ -9,19 +10,15 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { ProductsService } from '../../services/products/products.service';
+import { ParseIntPipe } from '../../common/parse-int/parse-int.pipe';
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
   @Get()
-  getMany(
-    @Query('limit') limit = 100,
-    @Query('offset') offset = 0,
-    @Query('brand') brand: string,
-  ) {
+  getMany(@Query('limit') limit = 100, @Query('offset') offset = 0) {
     return this.productsService.findAll();
   }
 
