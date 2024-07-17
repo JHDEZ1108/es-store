@@ -44,4 +44,3 @@ Visita `http://localhost:3000` para interactuar con la API.
 ---
 
 Este documento y el código fuente están destinados a demostrar las habilidades en desarrollo backend con NestJS para Boxful latam.
-```
