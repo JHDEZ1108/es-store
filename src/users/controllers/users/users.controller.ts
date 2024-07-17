@@ -26,6 +26,12 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
+  // Interacción entre modulos
+  @Get(':id/orders')
+  getOrders(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.getOrderByUser(id);
+  }
+
   @Post()
   create(@Body() payload: CreateUserDto) {
     return this.usersService.create(payload);
