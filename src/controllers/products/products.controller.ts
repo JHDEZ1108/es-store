@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Controller,
   Get,
-  Query,
   Param,
   Post,
   Body,
@@ -14,27 +12,26 @@ import {
 import { ProductsService } from '../../services/products/products.service';
 import { ParseIntPipe } from '../../common/parse-int/parse-int.pipe';
 import { CreateProductDto, UpdateProductDto } from '../../dtos/products.dtos';
+
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
   @Get()
-  getMany(@Query('limit') limit = 100, @Query('offset') offset = 0) {
+  getAll() {
     return this.productsService.findAll();
   }
 
   @Get(':productId')
   @HttpCode(HttpStatus.OK)
   getOne(@Param('productId', ParseIntPipe) productId: number) {
-    return {
-      msg: `Producto ${productId}`,
-      body: this.productsService.findOne(productId),
-    };
+    return this.productsService.findOne(productId);
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() payload: CreateProductDto) {
-    this.productsService.create(payload);
+    return this.productsService.create(payload);
   }
 
   @Put(':productId')
@@ -47,6 +44,10 @@ export class ProductsController {
 
   @Delete(':productId')
   delete(@Param('productId', ParseIntPipe) productId: number) {
-    return this.productsService.remove(productId);
+    this.productsService.remove(productId);
+    return {
+      statusCode: HttpStatus.NO_CONTENT,
+      message: `Product #${productId} deleted successfully`,
+    };
   }
 }

@@ -7,8 +7,13 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true, // Alerta si se pasan parametros que no estan dentro del dto
+      // forbidNonWhitelisted: true, Alerta si se pasan parametros que no estan dentro del dto
     }),
   );
+
+  // El servidor escuchará en el puerto 3000
+  await app.listen(3000);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
+
 bootstrap();
